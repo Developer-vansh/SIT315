@@ -23,8 +23,7 @@ void setup() {
   // Timer1 setup for 1 second interval
   TCCR1A = 0;
   TCCR1B = 0;
-  TCNT1 = 0;
-  OCR1A = 15624;
+  OCR1A = 62500; // comapre match value for 1 sec
   TCCR1B |= (1 << WGM12) | (1 << CS12); // Configure for CTC mode with prescaler 256
   TIMSK1 |= (1 << OCIE1A);  // Enable Timer1 compare match A interrupt
 
@@ -66,6 +65,7 @@ ISR(PCINT2_vect) {
 
 // Interrupt Service Routine for Timer1 compare match A
 ISR(TIMER1_COMPA_vect) {
+   TCNT1 = 0; // set 0 to start counting again
   // Toggle the state of the timer LED using bitwise XOR
   PORTD ^= (1 << PORTD5);
 }
