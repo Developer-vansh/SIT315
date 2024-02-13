@@ -1,8 +1,8 @@
 void setup() {
   // Set PIR sensor pins as inputs
-  DDRD &= ~(1 << DDD2); // pir3
-  DDRD &= ~(1 << DDD3); // pir2
-  DDRD &= ~(1 << DDD4); // pir1
+  DDRD &= ~(1 << DDD2); // ldr
+  DDRD &= ~(1 << DDD3); // potentiometer
+  DDRD &= ~(1 << DDD4); // pir
 
   // Set buzzer and LEDs pins as outputs
   DDRB |= (1 << DDB4); // buzzer
@@ -12,9 +12,9 @@ void setup() {
   DDRB |= (1 << DDB1); // gLed
 
   // Enable Pin Change Interrupts (PCINT) for PIR sensors
-  PCMSK2 |= (1 << PCINT18); // PCINT for pin 2 (pir1)
-  PCMSK2 |= (1 << PCINT19); // PCINT for pin 3 (pir2)
-  PCMSK2 |= (1 << PCINT20); // PCINT for pin 4 (pir3)
+  PCMSK2 |= (1 << PCINT18); // PCINT for pin 2 (ldr)
+  PCMSK2 |= (1 << PCINT19); // PCINT for pin 3 (potentiometer)
+  PCMSK2 |= (1 << PCINT20); // PCINT for pin 4 (pir)
   PCICR |= (1 << PCIE2);    // Enable PortD PCINT
 
   // Disable interrupts during setup
@@ -43,14 +43,17 @@ void loop() {
 ISR(PCINT2_vect) {
   // Check PIR sensors states and control LEDs and buzzer accordingly
   if (PIND & (1 << PIND4)) {
+    Serial.println("Detetcted Pir");
     PORTB |= (1 << PORTB4); // Buzzer on
     PORTB |= (1 << PORTB3); // Green LED on
   } 
   else if (PIND & (1 << PIND3)) {
+    Serial.println("Detetcted Potentiometer");
     PORTB |= (1 << PORTB4); // Buzzer on
     PORTB |= (1 << PORTB2); // Blue LED on
   }
   else if (PIND & (1 << PIND2)) {
+    Serial.println("Detetcted LDR");
     PORTB |= (1 << PORTB4); // Buzzer on
     PORTB |= (1 << PORTB1); // Red LED on
   } 
